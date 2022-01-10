@@ -1,0 +1,18 @@
+title: CAD Github
+description: >-
+  To understand the standard Git concept, be familiar with SET Git workflows,
+  and perform Git operations using CLI and GitHub UI.
+template:
+  repo: cad-github-template
+  name: cad-github
+before:
+  - type: createIssue
+    title: Welcome!
+    body: new-issue.md
+steps:
+  - title: First step
+    description: The first step in your course
+    event: issues.assigned
+    link: '{{ repoUrl }}'
+    actions:
+      - type: closeIssue
