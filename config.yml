@@ -35,12 +35,43 @@ steps:
         operator: ===
         right: done
         left: '%payload.comment.body%'
+        store:
+          jira_story_id: '%payload.comment.body%'
         else:
           - type: respond
-            with: 'invalid-step2-response.md'
+            with: 'invalid-complete-response.md'
       - type: respond
         with: 'record-changes.md'
   - title: 'Step 3: Record Changes to the Repository'
     description: 'Understand the status of the current branch'
-
-
+    event: issue_comment.created
+    link: { { issue_url } }
+      actions:
+        - type: gate
+          operator: ===
+          right: done
+          left: '%payload.comment.body%'
+          else:
+            - type: respond
+              with: 'invalid-complete-response.md'
+        - type: respond
+          with: 'understand-branch-concept.md'
+  - title: 'Step 4: Understand Git Branching'
+    description: 'Understand the basic git branching concept'
+    event: push
+    link: { { issue_url } }
+      actions:
+        - type: gate
+          operator: test
+          left: '^{{ jira_story_id }}\s*: .+$'
+          right: '%payload.head_commit.message%'
+          else:
+            - type: respond
+              with: 'invalid-commit-message.md'
+        - type: gate
+          operator: ===
+          left: '%payload.before%'
+          right: 'c8bed0cf6ed3ac4ad5fc9a6fb3fca785be2e8cce'
+          else:
+            - type: respond
+              with: 'invalid-branch-hierarchy.md'
