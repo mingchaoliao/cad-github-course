@@ -7,12 +7,18 @@ template:
   name: cad-github
 before:
   - type: createIssue
-    title: Welcome!
-    body: new-issue.md
+    title: 'Step 1: Choose a JIRA Story'
+    body: set-jira-story-id.md
+    store:
+      step1_issue_url: '{{ result.data.html_url }}'
 steps:
-  - title: First step
-    description: The first step in your course
-    event: issues.assigned
-    link: '{{ repoUrl }}'
+  - title: 'Step 1: Choose a JIRA Story'
+    description: Choose a JIRA story to use in this course.
+    event: issue_comment.created
+    link: '{{ step1_issue_url }}'
     actions:
-      - type: closeIssue
+      - type: gate
+        operator: test
+        right: '%payload.comment.body%'
+        left: '[A-Z]+-\d+'
+        every: false
