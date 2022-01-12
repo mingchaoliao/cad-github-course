@@ -1,5 +1,5 @@
 
-## Task 1: Choose a JIRA Story
+## Step 1: Choose a JIRA Story
 
 1. **Add a comment** (in the bottom of the page) to this issue containing the JIRA story ID you used to log your work time. 
 2. Click **Comment**.

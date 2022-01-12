@@ -10,15 +10,37 @@ before:
     title: 'Step 1: Choose a JIRA Story'
     body: set-jira-story-id.md
     store:
-      step1_issue_url: '{{ result.data.html_url }}'
+      issue_url: '{{ result.data.html_url }}'
 steps:
   - title: 'Step 1: Choose a JIRA Story'
     description: Choose a JIRA story to use in this course.
     event: issue_comment.created
-    link: '{{ step1_issue_url }}'
+    link: '{{ issue_url }}'
     actions:
       - type: gate
         operator: test
         right: '%payload.comment.body%'
         left: '[A-Z]+-\d+'
-        every: false
+        else:
+          - type: respond
+            with: 'invalid-jira-story-id.md'
+      - type: respond
+        with: 'clone-repo.md'
+  - title: 'Step 2: Clone the Repository'
+    description: Clone this repository to your local computer.
+    event: issue_comment.created
+    link: {{ issue_url }}
+    actions:
+      - type: gate
+        operator: ===
+        right: done
+        left: '%payload.comment.body%'
+        else:
+          - type: respond
+            with: 'invalid-step2-response.md'
+      - type: respond
+        with: 'record-changes.md'
+  - title: 'Step 3: Record Changes to the Repository'
+    description: 'Understand the status of the current branch'
+
+
